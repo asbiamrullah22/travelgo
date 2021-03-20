@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  travelgo:
+    build: 
+      context: .
+    container_name: travelgo
+    volumes: 
+      - 'D:/docker/travelgo:/var/www/html'
+    networks: 
+      - 'travelgo'
+    ports: 
+      - '80:80'
+
+  mysql:
+      image: mysql:5.7
+      container_name: mysql
+      ports:
+        - '3306'
+      networks:
+        - 'travelgo'
+      environment:
+        MYSQL_USER: 'travelgo'
+        MYSQL_PASSWORD: 'travelgo'
+        MYSQL_ROOT_PASSWORD: '123456'
+        MYSQL_DATABASE : 'travelgo'
+      volumes:
+        - 'C:/Databasedocker:/var/lib/mysql'
+
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: phpmyadmin
+      ports:
+        - '8181:80'
+      environment:
+        PMA_HOST: mysql
+      networks:
+        - 'travelgo'
+      depends_on:
+        - 'mysql'   
+            
+networks:
+  travelgo :
+    name: travelgo
